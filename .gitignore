@@ -1,0 +1,36 @@
+HELP.md
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+.DS_Store
+
+### autogen ###
+.cache/
+agents/.cache/
+
+### STS ###
+.apt_generated
+.factorypath
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+/build/
+
+### VS Code ###
+.vscode/
+
+### GitHub ###
+.env
+
