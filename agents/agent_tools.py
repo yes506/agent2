@@ -16,7 +16,7 @@ import random
 
 def get_ToolAgent():
     ToolAgent = UserProxyAgent(
-        name="tool_agent",
+        name="ToolAgent",
         human_input_mode="NEVER",
         llm_config=False,
         code_execution_config=False,

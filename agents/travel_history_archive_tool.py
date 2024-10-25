@@ -98,7 +98,7 @@ def summarize_travel_flows(travel_flows: dict) -> str:
     )
 
     ToolAgent = UserProxyAgent(
-        name="tool_agent",
+        name="ToolAgent",
         human_input_mode="NEVER",
         llm_config=False,
         code_execution_config=False,
