@@ -47,25 +47,25 @@ PROMPT_MESSAGE = """
     #역할 : 너는 최고의 통찰력, 기획력, 꼼꼼함을 가진 행복한 여행을 설계 해주는 여행 플래너야.
 
     # 여행 계획 수립 시 필수 고려 사항:
-        - 너에게 제공된 input의 사용자 입력 문구를 분석해서 반드시 필수 요소를 추출하고 기억해둔다. 필수 요소는 아래와 같다.
-            - 출발 지점
-            - 여행 반경(Km)
-            - 여행자 수
-            - 여행자 관계
-            - 여행 목적
-            - 여행 일자
-            - 여행 가용 시작 시간
-            - 여행 가용 종료 시간
-            - 점심 식사 가능 시작 시간
-            - 점심 식사 가능 종료 시간
-            - 저녁 식사 가능 시작 시간
-            - 저녁 식사 가능 종료 시간
-            - 여행자 정보
-            
+        - 너에게 제공된 input의 사용자 입력 문구를 분석해서 반드시 필수 요소를 추출하고 기억해둔다. 필수 요소는 아래와 같다. input에 필수요소가 없다면 콜론 뒤에 기재한 기본값을 사용한다.
+            - 출발 지점: 기본값 없음
+            - 여행 반경(Km): 1km
+            - 여행자 수: 2명
+            - 여행자 관계: 친구
+            - 여행 목적: 친목 도모
+            - 여행 일자: 현재 날짜 기준 다음에 오는 토요일
+            - 여행 가용 시작 시간: 오전 11시
+            - 여행 가용 종료 시간: 오후 3시
+            - 점심 식사 가능 시작 시간: 오후 12시
+            - 점심 식사 가능 종료 시간: 오후 1시 30분
+            - 저녁 식사 가능 시작 시간: 오후 6시
+            - 저녁 식사 가능 종료 시간: 오후 7시 30분
+            - 여행자 정보 : 익명1/여성/30세, 익명2/남성/30세        
         - 제공된 도구(tool)만 사용해.
         - input으로 주어진 조건의 상관관계를 최대한 고려해.
         - 동선은 출발지점에서 시작하여 복귀해야 해.
         - 여행 가용 시간 조건을 반드시 준수하여, 동선을 설계해.
+        - 각 장소 선정 후, 각 장소에 머무는 시간대의 날씨를 고려하여, 야외 등 적합하지 않으면 대체 장소를 찾아.
         - 각 장소간 이동하는 시간, 각 장소의 특성에 맞는 체류시간을 반드시 세밀하게 계산해서 동선을 설계해.
         - 주소 정보가 없거나, 올바르지 않은 곳은 제외해.
         - 주어진 식사 가능 시간대 안에서는 반드시 식사가 이루어 져야 하고, 구체적인 방문 장소를 제안해.
@@ -102,7 +102,8 @@ AZURE_OPEN_AI_DEPLOYMENT_NAME = os.getenv("AZURE_OPEN_AI_DEPLOYMENT_NAME")
 from autogen import AssistantAgent
 from autogen.cache import Cache
 from agents.agent_tools import get_each_point_info, get_ToolAgent, SearchWeb, get_geo_code, convert_address, \
-    get_pedestrian_routes_transit_time_distance, get_travel_flow, SayTerminate, SearchTravelFlowsHistoryArchiveContext
+    get_pedestrian_routes_transit_time_distance, get_travel_flow, SayTerminate, SearchTravelFlowsHistoryArchiveContext, get_current_date_time, \
+    get_whether_info
 from agents.output_tool import get_travel_flows, clear_travel_flows, get_travel_flows_demo
 from agents.travel_history_archive_tool import proceed_embeddings_for_travel_flows_history_archive,\
     summarize_travel_flows
@@ -270,6 +271,29 @@ def plan(corpus: str):
 
     assistant \
         .register_for_llm(
+            name="get_current_date_time",
+            description="""
+            현재 날짜 시각을 반환하는 함수
+            """
+    )(get_current_date_time)
+
+    assistant \
+        .register_for_llm(
+            name="get_whether_info",
+            description="""
+            날씨 정보를 반환하는 함수
+            두 시간 단위로만 날씨 정보를 제공함.
+            # 함수 입력 파라미터 상세:
+            - year: 연도
+            - month: 월
+            - day: 일
+            - start_hour: 시작 시간
+            - end_hour: 종료 시간
+            """
+    )(get_whether_info)
+
+    assistant \
+        .register_for_llm(
             name="SayTerminate",
             description="""
             대화 종료 메시지를 출력하는 함수
@@ -321,5 +345,4 @@ def plan(corpus: str):
     travel_flows = get_travel_flows_demo()
     travel_flows_summary = summarize_travel_flows(travel_flows)
     proceed_embeddings_for_travel_flows_history_archive(travel_flows_summary)
-
     return travel_flows

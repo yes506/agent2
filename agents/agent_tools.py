@@ -10,6 +10,8 @@ from agents.output_tool import append_travel_flow
 from utils.http_util import get_pool_manager
 from agents.travel_topic_tool import retrieve_travel_topic_text_by_embeddings_similarity
 from agents.travel_history_archive_tool import retrieve_travel_history_archive_context_by_embeddings_similarity
+from datetime import datetime
+import random
 
 
 def get_ToolAgent():
@@ -37,6 +39,10 @@ def get_ToolAgent():
         .register_for_execution(name="SearchTravelTopicContext")(SearchTravelTopicContext)
     ToolAgent \
         .register_for_execution(name="SearchTravelFlowsHistoryArchiveContext")(SearchTravelFlowsHistoryArchiveContext)
+    ToolAgent \
+        .register_for_execution(name="get_current_date_time")(get_current_date_time)
+    ToolAgent \
+        .register_for_execution(name="get_whether_info")(get_whether_info)
 
     ToolAgent \
         .register_for_execution(name="SayTerminate")(SayTerminate)
@@ -265,7 +271,7 @@ def get_travel_flow(flow_order: int, from_point: dict, to_point: dict, transit_t
 
     append_travel_flow(travel_flow)
 
-    store_route_static_map_image(travel_flow, flow_order, from_point["longitude"], from_point["latitude"], to_point["longitude"], to_point["latitude"])
+    # store_route_static_map_image(travel_flow, flow_order, from_point["longitude"], from_point["latitude"], to_point["longitude"], to_point["latitude"])
 
     return travel_flow
 
@@ -318,6 +324,16 @@ def SearchTravelTopicContext(query: str) -> str:
 # Vector DB에서 거리 유사도를 기반으로 특정 여행 계획 기록에 대한 컨텍스트를 추출하는 함수
 def SearchTravelFlowsHistoryArchiveContext(query: str) -> str:
     return retrieve_travel_history_archive_context_by_embeddings_similarity(query)
+
+
+# 현재 날짜와 시간을 반환하는 함수
+def get_current_date_time() -> str:
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+# 특정 날짜와 시간대의 날씨 정보를 반환하는 함수
+def get_whether_info(year: str, month: str, date: str, start_hour: str, end_hour: str) -> str:
+    return random.choice(["맑음", "흐림", "비", "눈", "폭풍", "안개"])
 
 
 # 대화 종료 발언
