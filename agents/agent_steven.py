@@ -7,10 +7,61 @@ load_dotenv("/Users/donghyeon/Desktop/development/ai-intelligence-app/agent2/con
 PROMPT_MESSAGE = """
     너는 최고의 통찰력, 기획력, 꼼꼼함을 가진 행복한 여행을 설계 해주는 여행 플래너야. 여행 계획 세워줘"""
 
-PROMPT_MESSAGE = """
-    너는 최고의 통찰력, 기획력, 꼼꼼함을 가진 행복한 여행을 설계 해주는 여행 플래너야.
+# PROMPT_MESSAGE = """
+#     너는 최고의 통찰력, 기획력, 꼼꼼함을 가진 행복한 여행을 설계 해주는 여행 플래너야.
+#
+#     여행 계획 수립 시 필수 고려 사항:
+#         - 제공된 도구(tool)만 사용해.
+#         - input으로 주어진 조건의 상관관계를 최대한 고려해.
+#         - 동선은 출발지점에서 시작하여 복귀해야 해.
+#         - 여행 가용 시간 조건을 반드시 준수하여, 동선을 설계해.
+#         - 각 장소간 이동하는 시간, 각 장소의 특성에 맞는 체류시간을 반드시 세밀하게 계산해서 동선을 설계해.
+#         - 주소 정보가 없거나, 올바르지 않은 곳은 제외해.
+#         - 주어진 식사 가능 시간대 안에서는 반드시 식사가 이루어 져야 하고, 구체적인 방문 장소를 제안해.
+#         - 커피, 차, 디저트 등은 식사 시간과 관계 없어.
+#         - 여행은 여행자의 성향과 취향 등 다양한 조건을 세심하게 고려해야 하고, 다양한 경험을 제공해야 하며 최고의 만족도를 제공해.
+#
+#     최종 답변 필수 조건:
+#         - 동선 형식 : 지점1(출발지점) -> 지점2(추천장소1) -> 지점3(추천장소2) -> ... -> 지점n(도착지점)
+#         - 계획된 여행 동선에서의 모든 지점(1~n) 각각의 정보 파라미터를 포함하여 반드시 get_each_point_info 도구를 반드시 n회 실행해.
+#         - 출발지점과 도착지점이 동일하지만, 재활용하지 말고 반드시 구성 내용이 다른 새로운 동선으로 get_each_point_info 도구를 실행해.
+#         - 모든 지점(1~n)에 대한 get_each_point_info 도구 실행이 완료되면, 반드시 get_travel_flow 도구를 실행하여 최종 여행 동선 정보를 완료해.
+#         - 여기 까지 누락없이 수행했다면, 최종 답변은 완료된 것이고 SayTerminate 도구를 실행하여 대화를 종료해.
+#
+#     아래와 같은 format 사용해서 프로세스를 수행해:
+#
+#     질문: 인풋(input)으로 들어온 질문 이다. 너는 이 질문에 대해 답변을 해야 한다.
+#     생각: 너는 항상 니가 답변을 준비하기 위해 무엇을 해야할 지 생각해고 계획을 세워야 한다.
+#     행동: 너가 계획한 것을 수행하는 것이 행동이다. 너에게 제공된 도구(tool)을 활용하여 생각한 것을 행동으로 옮겨야 해.
+#     행동 입력: 행동을 수행하기 위한 입력값. 너는 이 입력값을 통해 행동을 수행해야 해.
+#     관찰: 행동의 결과. 너는 앞서 수행된 행동의 결과를 관찰하고 분석해야 해.
+#     ... (이 프로세스는 반복 가능하다.)
+#     생각: 나는 지금 최종 답변을 알고 있다.
+#     최종 답변: 최초 인풋(input) 질문에 대한 최종적인 답변이야.
+#
+#     시작해!
+#     질문: {input}
+#     """
 
-    여행 계획 수립 시 필수 고려 사항:
+PROMPT_MESSAGE = """
+    #역할 : 너는 최고의 통찰력, 기획력, 꼼꼼함을 가진 행복한 여행을 설계 해주는 여행 플래너야.
+
+    # 여행 계획 수립 시 필수 고려 사항:
+        - 너에게 제공된 input의 사용자 입력 문구를 분석해서 반드시 필수 요소를 추출하고 기억해둔다. 필수 요소는 아래와 같다.
+            - 출발 지점
+            - 여행 반경(Km)
+            - 여행자 수
+            - 여행자 관계
+            - 여행 목적
+            - 여행 일자
+            - 여행 가용 시작 시간
+            - 여행 가용 종료 시간
+            - 점심 식사 가능 시작 시간
+            - 점심 식사 가능 종료 시간
+            - 저녁 식사 가능 시작 시간
+            - 저녁 식사 가능 종료 시간
+            - 여행자 정보
+            
         - 제공된 도구(tool)만 사용해.
         - input으로 주어진 조건의 상관관계를 최대한 고려해.
         - 동선은 출발지점에서 시작하여 복귀해야 해.
@@ -21,23 +72,23 @@ PROMPT_MESSAGE = """
         - 커피, 차, 디저트 등은 식사 시간과 관계 없어.
         - 여행은 여행자의 성향과 취향 등 다양한 조건을 세심하게 고려해야 하고, 다양한 경험을 제공해야 하며 최고의 만족도를 제공해.
 
-    최종 답변 필수 조건:
+    # 최종 답변 필수 조건:
         - 동선 형식 : 지점1(출발지점) -> 지점2(추천장소1) -> 지점3(추천장소2) -> ... -> 지점n(도착지점)
         - 계획된 여행 동선에서의 모든 지점(1~n) 각각의 정보 파라미터를 포함하여 반드시 get_each_point_info 도구를 반드시 n회 실행해.
         - 출발지점과 도착지점이 동일하지만, 재활용하지 말고 반드시 구성 내용이 다른 새로운 동선으로 get_each_point_info 도구를 실행해.
         - 모든 지점(1~n)에 대한 get_each_point_info 도구 실행이 완료되면, 반드시 get_travel_flow 도구를 실행하여 최종 여행 동선 정보를 완료해.
         - 여기 까지 누락없이 수행했다면, 최종 답변은 완료된 것이고 SayTerminate 도구를 실행하여 대화를 종료해.
 
-    아래와 같은 format 사용해서 프로세스를 수행해:
+    # 아래와 같은 format 사용해서 프로세스를 수행해:
 
-    질문: 인풋(input)으로 들어온 질문 이다. 너는 이 질문에 대해 답변을 해야 한다.
-    생각: 너는 항상 니가 답변을 준비하기 위해 무엇을 해야할 지 생각해고 계획을 세워야 한다.
-    행동: 너가 계획한 것을 수행하는 것이 행동이다. 너에게 제공된 도구(tool)을 활용하여 생각한 것을 행동으로 옮겨야 해.
-    행동 입력: 행동을 수행하기 위한 입력값. 너는 이 입력값을 통해 행동을 수행해야 해.
-    관찰: 행동의 결과. 너는 앞서 수행된 행동의 결과를 관찰하고 분석해야 해.
-    ... (이 프로세스는 반복 가능하다.)
-    생각: 나는 지금 최종 답변을 알고 있다.
-    최종 답변: 최초 인풋(input) 질문에 대한 최종적인 답변이야.
+        질문: 인풋(input)으로 들어온 질문 이다. 너는 이 질문에 대해 답변을 해야 한다.
+        생각: 너는 항상 니가 답변을 준비하기 위해 무엇을 해야할 지 생각해고 계획을 세워야 한다.
+        행동: 너가 계획한 것을 수행하는 것이 행동이다. 너에게 제공된 도구(tool)을 활용하여 생각한 것을 행동으로 옮겨야 해.
+        행동 입력: 행동을 수행하기 위한 입력값. 너는 이 입력값을 통해 행동을 수행해야 해.
+        관찰: 행동의 결과. 너는 앞서 수행된 행동의 결과를 관찰하고 분석해야 해.
+        ... (이 프로세스는 반복 가능하다.)
+        생각: 나는 지금 최종 답변을 알고 있다.
+        최종 답변: 최초 인풋(input) 질문에 대한 최종적인 답변이야.
 
     시작해!
     질문: {input}
@@ -50,9 +101,9 @@ AZURE_OPEN_AI_DEPLOYMENT_NAME = os.getenv("AZURE_OPEN_AI_DEPLOYMENT_NAME")
 
 from autogen import AssistantAgent
 from autogen.cache import Cache
-from agents.agent_tools import get_each_point_info, get_ToolsAgent, SearchWeb, get_geo_code, convert_address, \
+from agents.agent_tools import get_each_point_info, get_ToolAgent, SearchWeb, get_geo_code, convert_address, \
     get_pedestrian_routes_transit_time_distance, get_travel_flow, SayTerminate, SearchTravelFlowsHistoryArchiveContext
-from agents.output_tool import get_travel_flows, clear_travel_flows
+from agents.output_tool import get_travel_flows, clear_travel_flows, get_travel_flows_demo
 from agents.travel_history_archive_tool import proceed_embeddings_for_travel_flows_history_archive,\
     summarize_travel_flows
 
@@ -71,7 +122,7 @@ def get_prompt_message(sender, recipient, context):
 
 def get_steven_jobs_agent():
     return AssistantAgent(
-        name="AIStevenJobs",
+        name="AssistantAgent",
         is_termination_msg=lambda x: x.get("content", "") and x.get("content", "").rstrip().endswith("TERMINATE"),
         system_message="""
         너는 제공된 도구(tool)만 사용할 수 있어.
@@ -82,25 +133,26 @@ def get_steven_jobs_agent():
     )
 
 
-def plan(startPoint: str,
-         radius: int,
-         numberOfMember: int,
-         relationship: str,
-         purpose: str,
-         travelDate: str,
-         startTime: str,
-         endTime: str,
-         mealLunchStartTime: str,
-         mealLunchEndTime: str,
-         mealDinnerStartTime: str,
-         mealDinnerEndTime: str,
-         members: list):
+# def plan(startPoint: str,
+#          radius: int,
+#          numberOfMember: int,
+#          relationship: str,
+#          purpose: str,
+#          travelDate: str,
+#          startTime: str,
+#          endTime: str,
+#          mealLunchStartTime: str,
+#          mealLunchEndTime: str,
+#          mealDinnerStartTime: str,
+#          mealDinnerEndTime: str,
+#          members: list):
+def plan(corpus: str):
 
     clear_travel_flows()
 
     assistant = get_steven_jobs_agent()
 
-    ToolsAgent = get_ToolsAgent()
+    ToolAgent = get_ToolAgent()
 
     assistant \
         .register_for_llm(
@@ -225,30 +277,48 @@ def plan(startPoint: str,
     )(SayTerminate)
 
     with Cache.disk(cache_seed=43) as cache:
+
+        print(f"""
+        User_Proxy (to AssistantAgent):
+        - user-input: {corpus}
+        """)
+
+        # assistant.initiate_chat(
+        #     recipient=ToolAgent,
+        #     message=get_prompt_message,
+        #     question=f"""
+        #     항목이 나열된 순서는 가중치와 무관함.
+        #     다음 조건을 고려하여 멋진 여행 계획을 세워라.
+        #     - 출발 지점: {startPoint}
+        #     - 여행 반경(Km): {radius}
+        #     - 여행자 수: {numberOfMember}
+        #     - 여행자 관계: {relationship}
+        #     - 여행 목적: {purpose}
+        #     - 여행 일자: {travelDate}
+        #     - 여행 가용 시작 시간: {startTime}
+        #     - 여행 가용 종료 시간: {endTime}
+        #     - 점심 식사 가능 시작 시간: {mealLunchStartTime}
+        #     - 점심 식사 가능 종료 시간: {mealLunchEndTime}
+        #     - 저녁 식사 가능 시작 시간: {mealDinnerStartTime}
+        #     - 저녁 식사 가능 종료 시간: {mealDinnerEndTime}
+        #     - 여행자 정보 목록: {members}
+        #     """,
+        #     cache=cache
+        # )
+
         assistant.initiate_chat(
-            recipient=ToolsAgent,
+            recipient=ToolAgent,
             message=get_prompt_message,
             question=f"""
             항목이 나열된 순서는 가중치와 무관함.
-            다음 조건을 고려하여 멋진 여행 계획을 세워라.
-            - 출발 지점: {startPoint}
-            - 여행 반경(Km): {radius}
-            - 여행자 수: {numberOfMember}
-            - 여행자 관계: {relationship}
-            - 여행 목적: {purpose}
-            - 여행 일자: {travelDate}
-            - 여행 가용 시작 시간: {startTime}
-            - 여행 가용 종료 시간: {endTime}
-            - 점심 식사 가능 시작 시간: {mealLunchStartTime}
-            - 점심 식사 가능 종료 시간: {mealLunchEndTime}
-            - 저녁 식사 가능 시작 시간: {mealDinnerStartTime}
-            - 저녁 식사 가능 종료 시간: {mealDinnerEndTime}
-            - 여행자 정보 목록: {members}
+            사용자가 인풋으로 전달한 사용자 입력 문구에서 필요 요소를 뽑아내어 멋진 여행 계획을 세워라.
+            - 사용자 입력 문구: {corpus}
             """,
             cache=cache
         )
 
-    travel_flows = get_travel_flows(members, travelDate, relationship, purpose)
+    # travel_flows = get_travel_flows(members, travelDate, relationship, purpose)
+    travel_flows = get_travel_flows_demo()
     travel_flows_summary = summarize_travel_flows(travel_flows)
     proceed_embeddings_for_travel_flows_history_archive(travel_flows_summary)
 

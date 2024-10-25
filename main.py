@@ -8,20 +8,23 @@ from agents.travel_topic_tool import search_wiki_page_and_store_raw
 from agents.agent_chatbot import chat
 
 
+# class Question(BaseModel):
+#     startPoint: str
+#     radius: int
+#     numberOfMember: int
+#     relationship: str
+#     purpose: str
+#     travelDate: str
+#     startTime: str
+#     endTime: str
+#     mealLunchStartTime: str
+#     mealLunchEndTime: str
+#     mealDinnerStartTime: str
+#     mealDinnerEndTime: str
+#     members: list
+
 class Question(BaseModel):
-    startPoint: str
-    radius: int
-    numberOfMember: int
-    relationship: str
-    purpose: str
-    travelDate: str
-    startTime: str
-    endTime: str
-    mealLunchStartTime: str
-    mealLunchEndTime: str
-    mealDinnerStartTime: str
-    mealDinnerEndTime: str
-    members: list
+    inputText: str
 
 
 class TravelTopics(BaseModel):
@@ -44,20 +47,48 @@ app.add_middleware(
 
 
 @app.post("/plan-travel")
+# def make_a_travel_plan(question: Question):
 def make_a_travel_plan(question: Question):
-    result = plan(question.startPoint,
-                  question.radius,
-                  question.numberOfMember,
-                  question.relationship,
-                  question.purpose,
-                  question.travelDate,
-                  question.startTime,
-                  question.endTime,
-                  question.mealLunchStartTime,
-                  question.mealLunchEndTime,
-                  question.mealDinnerStartTime,
-                  question.mealDinnerEndTime,
-                  question.members)
+
+    input_corpus = f"""
+    사용자 입력 문 : {question.inputText}
+    - 점심 식사 가능 시작 시간: 12:00
+    - 점심 식사 가능 종료 시간: 13:30
+    - 저녁 식사 가능 시작 시간: 18:00
+    - 저녁 식사 가능 종료 시간: 19:30
+    """
+
+    result = plan(input_corpus)
+
+    # result = plan("논산역",
+    #               2,
+    #               2,
+    #               "친구",
+    #               "여행",
+    #               "2024-10-30",
+    #               "11:30",
+    #               "15:30",
+    #               "12:00",
+    #               "13:30",
+    #               "18:00",
+    #               "19:30",
+    #               [{'nickname': '김나을', 'gender': 'female', 'age': 33}, {'nickname': '김다을', 'gender': 'male', 'age': 33}]
+    #               )
+
+    # result = plan(question.startPoint,
+    #               question.radius,
+    #               question.numberOfMember,
+    #               question.relationship,
+    #               question.purpose,
+    #               question.travelDate,
+    #               question.startTime,
+    #               question.endTime,
+    #               question.mealLunchStartTime,
+    #               question.mealLunchEndTime,
+    #               question.mealDinnerStartTime,
+    #               question.mealDinnerEndTime,
+    #               question.members)
+
     return result
 
 
@@ -82,6 +113,6 @@ def pre_proceed_travel_topic(travel_topics: TravelTopics):
 
 
 @app.post("/chatbot/chat")
-def chat_with_chatbot(chat_message: ChatMessage):
+def chth_chatbot(chat_message: ChatMessage):
     return chat(chat_message.message)
 

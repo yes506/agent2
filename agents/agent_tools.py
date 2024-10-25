@@ -12,8 +12,8 @@ from agents.travel_topic_tool import retrieve_travel_topic_text_by_embeddings_si
 from agents.travel_history_archive_tool import retrieve_travel_history_archive_context_by_embeddings_similarity
 
 
-def get_ToolsAgent():
-    ToolsAgent = UserProxyAgent(
+def get_ToolAgent():
+    ToolAgent = UserProxyAgent(
         name="tool_agent",
         human_input_mode="NEVER",
         llm_config=False,
@@ -21,27 +21,27 @@ def get_ToolsAgent():
         description="필요한 도구(tool)를 적시 적소에 실행 시키는 도구 실행 전문 에이전트",
     )
 
-    ToolsAgent \
+    ToolAgent \
         .register_for_execution(name="get_each_point_info")(get_each_point_info)
-    ToolsAgent \
+    ToolAgent \
         .register_for_execution(name="SearchWeb")(SearchWeb)
-    ToolsAgent \
+    ToolAgent \
         .register_for_execution(name="get_geo_code")(get_geo_code)
-    ToolsAgent \
+    ToolAgent \
         .register_for_execution(name="convert_address")(convert_address)
-    ToolsAgent \
+    ToolAgent \
         .register_for_execution(name="get_pedestrian_routes_transit_time_distance")(get_pedestrian_routes_transit_time_distance)
-    ToolsAgent \
+    ToolAgent \
         .register_for_execution(name="get_travel_flow")(get_travel_flow)
-    ToolsAgent \
+    ToolAgent \
         .register_for_execution(name="SearchTravelTopicContext")(SearchTravelTopicContext)
-    ToolsAgent \
+    ToolAgent \
         .register_for_execution(name="SearchTravelFlowsHistoryArchiveContext")(SearchTravelFlowsHistoryArchiveContext)
 
-    ToolsAgent \
+    ToolAgent \
         .register_for_execution(name="SayTerminate")(SayTerminate)
 
-    return ToolsAgent
+    return ToolAgent
 
 
 # 각 추천 장소 정보 조회

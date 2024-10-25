@@ -81,10 +81,12 @@ def summarize_travel_flows(travel_flows: dict) -> str:
         - 여행 날짜(연도-월-일), 여행 멤버, 여행 멤버의 관계, 여행 목적, 여행 장소 목록
         요약글 작성 시 필수 준수 사항:
         - 400자 이내로 작성
+        - 소설가 처럼 이야기 하듯이 작성
+        - 반드시 현재 시제로 표현해. 과거 시제 사용 금지
         - 순전히 너의 문장 구성 능력으로 작성
         - 요약글 작성이 완료되면 반드시 SayTerminate 도구를 실행하여 대화를 종료해
         요약글 예문:
-        - 2024년 8월 2일 여행 멤버 남성0001, 여성0001, 여성0002 3명이 여름휴가 목적으로 여행. 장소는 서울 광화문, 경복궁, 맥도날드...(더 상세하게)
+        - 2024년 8월 2일 여행 멤버 남성0001, 여성0001, 여성0002 3명이 여름휴가 목적으로 여행한다. 장소는 서울 광화문, 경복궁, 맥도날드...(더 상세하게)
         파라미터 travel_flows 구성 주요 속성 의미:
         - members: 여행 멤버 목록
         - travel_date: 여행 날짜
@@ -95,7 +97,7 @@ def summarize_travel_flows(travel_flows: dict) -> str:
         """
     )
 
-    ToolsAgent = UserProxyAgent(
+    ToolAgent = UserProxyAgent(
         name="tool_agent",
         human_input_mode="NEVER",
         llm_config=False,
@@ -105,7 +107,7 @@ def summarize_travel_flows(travel_flows: dict) -> str:
 
     group_chat = GroupChat(
         max_round=100,
-        agents=[user_agent, summary_agent, ToolsAgent],
+        agents=[user_agent, summary_agent, ToolAgent],
         messages=[]
     )
 
@@ -124,7 +126,7 @@ def summarize_travel_flows(travel_flows: dict) -> str:
     '''
     )
 
-    ToolsAgent \
+    ToolAgent \
         .register_for_execution(name="SayTerminate")(SayTerminate)
 
     summary_agent \
@@ -140,7 +142,8 @@ def summarize_travel_flows(travel_flows: dict) -> str:
             recipient=group_chat_manager,
             message=get_prompt_message,
             question=f"{travel_flows}",
-            cache=cache
+            cache=cache,
+            silent=True
         )
 
     messages = []
@@ -152,8 +155,12 @@ def summarize_travel_flows(travel_flows: dict) -> str:
             chat_dict["content"] = chat_dict["content"].replace("TERMINATE", "")
             messages.append(chat_dict["content"])
 
+    print("################# 여행 계획 요약 시작 #################")
     for message in messages:
         travel_flows_summary += message
+        print(f"{travel_flows_summary}")
+
+    print("################# 여행 계획 요약 끝 #################")
 
     return travel_flows_summary
 

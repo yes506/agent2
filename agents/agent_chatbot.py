@@ -125,8 +125,8 @@ ChatbotAgent \
 )(SayTerminate)
 
 
-ToolsAgent = UserProxyAgent(
-    name="ToolsAgent",
+ToolAgent = UserProxyAgent(
+    name="ToolAgent",
     human_input_mode="NEVER",
     code_execution_config=False,
     description="""
@@ -134,19 +134,19 @@ ToolsAgent = UserProxyAgent(
     """,
 )
 
-ToolsAgent \
+ToolAgent \
     .register_for_execution(name="SayTerminate")(SayTerminate)
 
-ToolsAgent \
+ToolAgent \
     .register_for_execution(name="SearchWeb")(SearchWeb)
 
-ToolsAgent \
+ToolAgent \
     .register_for_execution(name="SearchTravelTopicContext")(SearchTravelTopicContext)
 
-ToolsAgent \
+ToolAgent \
     .register_for_execution(name="SearchTravelFlowsHistoryArchiveContext")(SearchTravelFlowsHistoryArchiveContext)
 
-ToolsAgent \
+ToolAgent \
     .register_for_execution(name="AppendFinalMessage")(AppendFinalMessage)
 
 
@@ -161,7 +161,7 @@ def chat(message) -> list:
     with Cache.disk(cache_seed=45) as cache:
 
         chat_result = ChatbotAgent.initiate_chat(
-            recipient=ToolsAgent,
+            recipient=ToolAgent,
             message=get_prompt_message,
             question=f"{message}",
             cache=cache
