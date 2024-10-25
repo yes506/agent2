@@ -4,7 +4,7 @@ import datetime
 from azure.cosmos import CosmosClient, PartitionKey, ContainerProxy
 from dotenv import load_dotenv
 
-load_dotenv("/Users/donghyeon/Desktop/development/ai-intelligence-app/agent2/config/.env")
+load_dotenv()
 
 
 def get_cosmos_db_container(container_id: str):

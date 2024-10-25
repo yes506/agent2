@@ -3,7 +3,7 @@ import wikipediaapi
 from dotenv import load_dotenv
 
 
-load_dotenv("/Users/donghyeon/Desktop/development/ai-intelligence-app/agent2/config/.env")
+load_dotenv()
 
 
 def get_wiki_client_for_ko():

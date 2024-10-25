@@ -3,7 +3,7 @@ from azure.storage.blob import BlobServiceClient
 import os
 from dotenv import load_dotenv
 
-load_dotenv("/Users/donghyeon/Desktop/development/ai-intelligence-app/agent2/config/.env")
+load_dotenv()
 
 
 def get_blob_service_client():

@@ -7,7 +7,7 @@ import os
 from dotenv import load_dotenv
 from autogen.cache import Cache
 
-load_dotenv("/Users/donghyeon/Desktop/development/ai-intelligence-app/agent2/config/.env")
+load_dotenv()
 
 
 AZURE_OPEN_AI_ENDPOINT = os.getenv("AZURE_OPEN_AI_ENDPOINT")

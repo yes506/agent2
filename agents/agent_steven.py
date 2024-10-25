@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 
-load_dotenv("/Users/donghyeon/Desktop/development/ai-intelligence-app/agent2/config/.env")
+load_dotenv()
 
 PROMPT_MESSAGE = """
     너는 최고의 통찰력, 기획력, 꼼꼼함을 가진 행복한 여행을 설계 해주는 여행 플래너야. 여행 계획 세워줘"""

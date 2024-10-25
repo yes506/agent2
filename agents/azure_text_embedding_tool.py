@@ -3,7 +3,7 @@ from openai import AzureOpenAI
 from dotenv import load_dotenv
 from agents.wikipedia_tool import get_wiki_single_page, get_wiki_summary
 
-load_dotenv("/Users/donghyeon/Desktop/development/ai-intelligence-app/agent2/config/.env")
+load_dotenv()
 
 
 def generate_embeddings(source_text: str):

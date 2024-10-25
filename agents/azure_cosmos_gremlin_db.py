@@ -2,7 +2,7 @@ import os
 from gremlin_python.driver import client, serializer
 from dotenv import load_dotenv
 
-load_dotenv("/Users/donghyeon/Desktop/development/ai-intelligence-app/agent2/config/.env")
+load_dotenv()
 
 
 def get_gremlin_client():
